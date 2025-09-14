@@ -1,6 +1,7 @@
 from beanie import Document, before_event, Insert, Update, Save, Replace
 from pydantic import Field, EmailStr, BaseModel
 from datetime import datetime, timezone
+from typing import Optional
 
 
 class UserModel(Document):
@@ -25,6 +26,7 @@ class CreateUserModel(BaseModel):
     skills: list[str] = []
 
 class UpdateUserModel(BaseModel):
-    full_name: str | None = None
-    user_type: str | None = None  # Can be "user" or "admin"
-    skills: list[str] | None = None
+    email: EmailStr
+    full_name: Optional[str] = None
+    user_type: Optional[str] = None
+    skills: Optional[list[str]] = None

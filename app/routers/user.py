@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from app.models.user_model import UserModel, UpdateUserModel, CreateUserModel
 from app.service.user import create_user, get_user_by_email, update_user, list_users, delete_user
 from typing import Optional
+from pydantic import EmailStr
 router = APIRouter(
     prefix="/users",
     tags=["users"],
@@ -24,9 +25,9 @@ async def get_user(email: str):
         return user
     return {"error": "User not found"}
 
-@router.put("/{email}")
-async def modify_user(email: str, update_data: UpdateUserModel):
-    user = await update_user(email, update_data)
+@router.put("/")
+async def modify_user(update_data: UpdateUserModel):
+    user = await update_user(update_data.email, update_data)
     if user:
         return user
     return {"error": "User not found"}
