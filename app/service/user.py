@@ -1,5 +1,7 @@
-from app.models.user_model import UserModel
+from app.models.user_model import UserModel, UpdateUserModel
 from typing import Optional, List,Dict,Any
+from beanie.operators import Set
+from pydantic import EmailStr
 
 async def create_user(user_data: Dict[str, Any]) -> UserModel:
     if not isinstance(user_data, dict):
@@ -12,14 +14,23 @@ async def get_user_by_email(email: str) -> Optional[UserModel]:
     user = await UserModel.find_one(UserModel.email == email)
     return user
 
-async def update_user(email: str, update_data: Dict[str, Any]) -> Optional[UserModel]:
-    user = await get_user_by_email(email)
-    if user:
-        for key, value in update_data.items():
-            setattr(user, key, value)
-        await user.save()
-        return user
-    return None
+async def update_user(email: EmailStr, update_data: UpdateUserModel) -> Optional[UserModel]:
+    try:
+        update_dict = update_data.dict(exclude_unset=True, exclude_none=True)
+        if not update_dict:
+            return None  # nothing to update
+
+        user = await UserModel.find_one(UserModel.email == email)
+        if not user:
+            return None
+
+        await user.update(Set(update_dict))
+
+        # return the fresh updated document
+        return await UserModel.get(user.id)
+    except Exception as e:
+        print(f"Error updating user: {e}")
+        return None
 
 async def list_users(page:int,page_size:int,filter:dict) -> List[UserModel]:
     page = max(page, 1)

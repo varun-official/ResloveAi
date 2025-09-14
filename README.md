@@ -3,12 +3,14 @@
 A FastAPI-based application for user management with MongoDB and Beanie ODM.
 
 ## Features
+
 - User CRUD operations
 - Skill-based filtering with regex support
 - MongoDB integration via Beanie
 - Async endpoints
 
 ## Folder Structure
+
 ```
 app/
   ├── config/         # Database and app config
@@ -22,6 +24,7 @@ requirements.txt       # Python dependencies
 ```
 
 ## Setup
+
 1. Clone the repo:
    ```sh
    git clone https://github.com/varun-official/ResloveAi.git
@@ -46,10 +49,12 @@ requirements.txt       # Python dependencies
    ```
 
 ## API Endpoints
+
 - `POST /users/` — Add user
 - `GET /users/` — List users (supports skill regex filtering)
 - `PUT /users/{email}` — Update user
 - `DELETE /users/{email}` — Delete user
 
 ## License
+
 MIT
